@@ -5,6 +5,8 @@ import 'package:poke_test/pokemon_column_widget.dart';
 import 'package:poke_test/pokemon_entity.dart';
 import 'package:poke_test/pokemon_fetch.dart';
 import 'package:poke_test/pokemon_text_Field.dart';
+import 'package:poke_test/provider/pokemon_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,8 +32,8 @@ class HomeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: BlocProvider<PokemonCubit>(
-          create: (context) => PokemonCubit(),
+        child: ChangeNotifierProvider(
+          create: (context) => PokemonChangeNotifier(),
           child: PokemonColumnWidget(),
         ),
       ),

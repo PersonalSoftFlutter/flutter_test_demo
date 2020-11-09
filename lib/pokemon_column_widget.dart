@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poke_test/pokemon_text_Field.dart';
+import 'package:poke_test/provider/pokemon_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 import 'bloc/pokemon_cubit.dart';
 
@@ -16,9 +18,9 @@ class _PokemonColumnWidgetState extends State<PokemonColumnWidget> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PokemonCubit, PokemonState>(
-      builder: (BuildContext context, PokemonState state) {
-        switch (state.status) {
+    return Consumer<PokemonChangeNotifier>(
+      builder: (BuildContext context, PokemonChangeNotifier pcn, Widget child) {
+        switch (pcn.state.status) {
           case PokemonStatus.none:
             name = '';
             url = '';
@@ -36,8 +38,8 @@ class _PokemonColumnWidgetState extends State<PokemonColumnWidget> {
             break;
           case PokemonStatus.loaded:
             isLoading = false;
-            name = state.pokemon.name;
-            url = state.pokemon.imageUrl;
+            name = pcn.state.pokemon.name;
+            url = pcn.state.pokemon.imageUrl;
             break;
         }
         return Stack(
@@ -56,7 +58,8 @@ class _PokemonColumnWidgetState extends State<PokemonColumnWidget> {
                 ),
                 RaisedButton(
                   onPressed: () =>
-                      BlocProvider.of<PokemonCubit>(context).updatePokemon(id),
+                      Provider.of<PokemonChangeNotifier>(context, listen: false)
+                          .updatePokemon(id),
                 ),
                 Text(name),
                 Image.network(url),
